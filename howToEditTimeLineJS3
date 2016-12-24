@@ -1,0 +1,12 @@
+//Edit anything
+After setting up work environment according to CONTRIBUTING.md
+First edit TimeLineJS3/source code or whatever you are looking to do
+Go into virtualenv by $workon TimeLineJS3
+then $fab build   //This compiles your changes into TimeLineJS3/build
+Now you can check changes against TimeLineJS3/history_of_everything.html
+to get out of virtualenv: $deactivate
+
+//history_of_everything can't be in compiled or example folder due to cross-site policy
+
+//Open history of everything
+run docsToJSON.sh to import google docs changes into JSON file (overwrites!)
