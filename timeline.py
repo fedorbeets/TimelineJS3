@@ -19,11 +19,11 @@ data = {}
 events = []
 eras = []
 data['events']=events
-data['eras']=eras
+#data['eras']=eras
 
 # Didn't support 'End Time': '', 'Time': ''
-
-keymap = {'Media': 'media|url', 'Media Caption': 'media|caption', 'Media Thumbnail': 'media|thumbnail',
+#
+keymap = {'Media': 'media|url','Media Caption': 'media|caption', 'Media Thumbnail': 'media|thumbnail',
           'Month': 'start_date|month', 'Day': 'start_date|day', 'Year': 'start_date|year',
           'End Month': 'end_date|month', 'End Day': 'end_date|day', 'End Year': 'end_date|year',
           'Headline': 'text|headline', 'Text': 'text|text',
@@ -46,11 +46,22 @@ for row in reader:
             event['background']['color']=row['Background']
         else:
             event['background']['url']=row['Background']
-    if (row['Type'] == 'title'):
-        data['title']=event
-    elif (row['Type'] == 'era'):
+    if row['Type'] == 'title':
+        data['title'] = event
+    elif row['Type'] == 'era':
         eras.append(event)
+        assert event['start_date']['year']  # check that era has a start/end year
+        assert event['end_date']['year']
     else:
+        assert int(event['start_date']['year'])  # check every event has start year
+        # print(type((event['text']['headline'])))
+        try:
+            assert event['text']['headline'], event['start_date'][
+                'year']  # headline required or else error, unlike spec
+        except (AssertionError,KeyError) as e:
+            message = "Year of bad event is: " + event['start_date']['year']
+            e.args += (message, )
+            raise
         events.append(event)
 
-json.dump(data,outfile, sort_keys=True,indent=4)
+json.dump(data, outfile, sort_keys=True, indent=4)
